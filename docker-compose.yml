@@ -1,0 +1,29 @@
+version: "2"
+services:
+  postgres:
+    container_name: dms-postgres
+    image: postgres
+    ports:
+        - "5433:5432" # Exposing Postgres on different port for convenience
+    environment:
+        POSTGRES_DB: "usiu-mr-and-miss-2018"
+        POSTGRES_PASSWORD: "password"
+        POSTGRES_USER: "postgres"
+    restart: always
+
+
+  base:
+    container_name: voting-system-mr-and-ms-usiu
+    image: voting-system-mr-and-ms-usiu:dev
+    depends_on:
+      - postgres
+    ports:
+        - "8000:8000"
+    links:
+        - "postgres:dms-postgres"
+    environment:
+        DB_PASSWORD: "password"
+        DB_USER: "postgres"
+        DB_HOST: "postgres"
+        DB_NAME: "usiu-mr-and-miss-2018"
+        DB_PORT: "5432"
